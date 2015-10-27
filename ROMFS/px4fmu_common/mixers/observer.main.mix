@@ -1,0 +1,11 @@
+Mixer for InDro Observer VTOL (Motors)
+================================================================================
+
+This file defines a mixer suitable for controlling throttle on a VTOL aircraft
+with 4 propellers mounted in an "X" configuration on a rotating frame, managed
+by a PX4FMU-v2 (e.g. PixHawk) board.
+
+--------------------------------------------------------------------------------
+Throttle Mixer (4 Motors)
+--------------------------------------------------------------------------------
+R:  4x  10000   10000   10000   0

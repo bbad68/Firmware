@@ -89,6 +89,7 @@
 #include "tiltrotor.h"
 #include "tailsitter.h"
 #include "standard.h"
+#include "tiltframe.h"
 
 
 extern "C" __EXPORT int vtol_att_control_main(int argc, char *argv[]);
@@ -189,10 +190,11 @@ private:
 
 	int _transition_command;
 
-	VtolType *_vtol_type;	// base class for different vtol types
-	Tiltrotor *_tiltrotor;	// tailsitter vtol type
-	Tailsitter *_tailsitter;	// tiltrotor vtol type
-	Standard *_standard;	// standard vtol type
+	VtolType * _vtol_type;	// base class for different vtol types
+	Tiltrotor * _tiltrotor;	// tailsitter vtol type
+	Tailsitter * _tailsitter;	// tiltrotor vtol type
+	Standard * _standard;	// standard vtol type
+	TiltFrame * _tiltframe;	// tiltframe vtol type
 
 //*****************Member functions***********************************************************************
 
