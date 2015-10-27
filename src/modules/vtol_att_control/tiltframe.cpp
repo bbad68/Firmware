@@ -318,7 +318,53 @@ void TiltFrame::set_mc_weights(float new_weight)
  */
 void TiltFrame::fill_actuator_outputs()
 {
-	// TODO.
+	/**
+     * The various Control Groups and Actuator Indices are defined at:
+     * http://pixhawk.com/dev/mixing#control_groups
+     */
+
+    /* Multi-Copter Controls. */
+    _actuators_out_0->control[actuator_controls_s::INDEX_ROLL] =
+        _actuators_mc_in->control[actuator_controls_s::INDEX_ROLL] *
+        _mc_roll_weight;
+    _actuators_out_0->control[actuator_controls_s::INDEX_PITCH] =
+        _actuators_mc_in->control[actuator_controls_s::INDEX_PITCH] *
+        _mc_pitch_weight;
+    _actuators_out_0->control[actuator_controls_s::INDEX_YAW] =
+        _actuators_mc_in->control[actuator_controls_s::INDEX_YAW] *
+        _mc_yaw_weight;
+
+    /* Fixed Wing Controls. */
+    _actuators_out_1->control[actuator_controls_s::INDEX_ROLL] =
+        _actuators_fw_in->control[actuator_controls_s::INDEX_ROLL] *
+        (1 - _mc_roll_weight);
+    _actuators_out_1->control[actuator_controls_s::INDEX_PITCH] =
+        (_actuators_fw_in->control[actuator_controls_s::INDEX_PITCH] +
+        _params->fw_pitch_trim) * (1 - _mc_pitch_weight);
+    _actuators_out_1->control[actuator_controls_s::INDEX_YAW] =
+        _actuators_fw_in->control[actuator_controls_s::INDEX_YAW] *
+        (1 - _mc_yaw_weight);
+
+    /* Throttle Control. */
+    if (_vtol_schedule.flight_mode == FW_MODE)
+    {
+        _actuators_out_0->control[actuator_controls_s::INDEX_THROTTLE] =
+            _actuators_fw_in->control[actuator_controls_s::INDEX_THROTTLE];
+    }
+    else
+    {
+        /* Default to MC Throttle Control for remaining Flight Modes. */
+        _actuators_out_0->control[actuator_controls_s::INDEX_THROTTLE] =
+            _actuators_mc_in->control[actuator_controls_s::INDEX_THROTTLE];
+    }
+
+    /**
+     * Motor Frame Control.
+     * Index "4" in Control Group 1 is defined for Aux0 Pin.
+     */
+    _actuators_out_1->control[4] =
+        math::constrain(_frame_angle, _MAX_REV_ANGLE, _MAX_FWD_ANGLE) /
+        _MAX_FWD_ANGLE;
 }
 
 int TiltFrame::parameters_update()
