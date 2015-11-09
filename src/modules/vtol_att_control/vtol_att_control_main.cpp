@@ -129,9 +129,11 @@ VtolAttitudeControl::VtolAttitudeControl() :
 	} else if (_params.vtol_type == 2) {
 		_standard = new Standard(this);
 		_vtol_type = _standard;
+
 	} else if (_params.vtol_type == 3) {
 		_tiltframe = new TiltFrame(this);
 		_vtol_type = _tiltframe;
+
 	} else {
 		_task_should_exit = true;
 	}
